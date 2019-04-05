@@ -2,9 +2,11 @@ require("dotenv").config();
 
 var keys = require("./keys.js");
 
-var spotify = require("spotify");
+var Spotify = require("node-spotify-api");
 var request = require("request");
 var fs = require("fs");
+
+//var spotify = new Spotify(keys.spotify);
 
 var input = process.argv;
 var action = input[2];
@@ -30,10 +32,25 @@ switch (action) {
 	doWhatItSays();
 	break;
 };
+// function writeToLogFile(data) {
+//     fs.appendFile("log.txt", '\r\n\r\n', function(err) {
+//         if (err) {
+//             return console.log(err);
+//         }
+//     });
+
+//     fs.appendFile("log.txt", (data), function(err) {
+//         if (err) {
+//             return console.log(err);
+//         }
+//         console.log(space + "log.txt was updated!");
+//     });
+// }
+
 
 function spotifyThis(inputs) {
 
-	var spotify = new Spotify(keys.spotifyKeys);
+	var spotify = new Spotify(keys.spotify);
 		if (!inputs){
         	inputs = 'The Sign';
     	}
@@ -41,14 +58,16 @@ function spotifyThis(inputs) {
 			if (err){
 	            console.log('Error occurred: ' + err);
 	            return;
-	        }
+	        } 	
 
-	        var songInfo = data.tracks.items;
-	        console.log("Artist(s): " + songInfo[0].artists[0].name);
-	        console.log("Song Name: " + songInfo[0].name);
-	        console.log("Preview Link: " + songInfo[0].preview_url);
-	        console.log("Album: " + songInfo[0].album.name);
-	});
+			var songInfo = data.tracks.items;
+				for (var i = 0; i < songInfo.lenght; i++) {
+	        console.log("Artist(s): " + songInfo[i].artists[0].name);
+	        console.log("Song Name: " + songInfo[i].name);
+	        console.log("Preview Link: " + songInfo[i].preview_url);
+	        console.log("Album: " + songInfo[i].album.name);
+				}
+		});
 };
 function concertThis(inputs) {
     var queryUrl ="https://rest.bandsintown.com/artists/" + inputs + "/events?app_id=codingbootcamp";
